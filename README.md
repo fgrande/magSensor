@@ -12,11 +12,49 @@ Then put the magsensor executable file in a convenient directory (I use /usr/loc
 
 
 
+How to use it
+=============
+
+You can run magsensor with the following syntax:
+
+    magSensor [-h] [-V] [-v] [-t <C|F>] [-m <T|H>] [-d <U|D>] [-z <Sensor name>] -p <devicePath> -c <value> -w <value>
+
+Where :
+
+-h (--help)      : Show quick help screen.
+
+-v (--verbose)   : Enable verbose output.
+
+-V (--version)   : Show script version.
+
+-t <C|F>         : Temperature Units:  C - Celsius degrees
+                                       F - Fahreneit degrees
+                   If not specified, the default is "C" (Celsius).
+
+-m <T|H>         : Reading Mode: T - Temperature
+                                 H - Humidity
+                   If not specified, the default is "T" (Temperature).
+
+-l <U|D>         : Threshold mode: U - Alarms are triggered if read value is higher than threshold.
+                                   D - Alarms are triggered if read value is lower than threshold.
+                   If not specified, the default value is "U".
+                 
+-z <Sensor Name> : Sensor logical name, to easily identify returning messages.
+
+-p <Device Path> : USB Device Path.
+
+-c <value>       : Critical Threshold.
+
+-w <value>       : Warning Threshold.
+
+
+
+
 Configure Nagios
 ================
 
 In the config directory You'll find a couple of files, defining commands and services for Nagios. Modify them to suite Your needs,
-then copy them in Your Nagios config directory. Fnally, restart Nagios to activate them.
+then copy them in Your Nagios config directory. Finally, restart Nagios to activate them.
 
 Since the Magiant Sensor is a USB device, the OS can deny access (even read-only) to it.
 If this is the case, we need to modify "udev rules", creating a new file such as : 
