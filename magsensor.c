@@ -17,7 +17,7 @@
 #include <linux/hiddev.h>
 #include <fcntl.h>
 #include <syslog.h>
-#include "magSensor.h"
+#include "magsensor.h"
 
 
 void show_version()
@@ -224,7 +224,11 @@ int GetData(char address[], thdata *data) {
 
 int main(int argc, char **argv)
 {
-	double _value;
+    double _value;
+    char _perfData[32];
+    char _measure[32];
+    char _unit[4];
+    char _pnpunit[4];
 
     loadOptions(argc, argv);
 
@@ -238,22 +242,26 @@ int main(int argc, char **argv)
       }
 
       _value = _testdata.t;
-      if (_mode == 'H')
-    	  _value = _testdata.h;
-
-      char _measure[32];
-      char _unit[4];
+      strcpy(_pnpunit, "");
       if (_mode == 'T')
       {
     	strcpy(_measure, "Temperature");
     	sprintf(_unit, "°%c", _tmode);
+    	//_tc = _critical;
+    	//_tw = _warning;
       }
+      
       if (_mode == 'H')
       {
         strcpy(_measure, "Humidity");
       	strcpy(_unit, "%");
+      	strcpy(_pnpunit, "%%");
+        _value = _testdata.h;
+    	//_hc = _critical;
+    	//_hw = _warning;
       }
 
+      sprintf(_perfData, "%s=%3.2f%s;%3.2f;%3.2f;;", _measure, _value, _pnpunit, _warning, _critical);
       sprintf(_message, "%s (%3.2f %s) is in safe zone (%3.2f%s / %3.2f%s) ", _measure, _value, _unit, _warning, _unit, _critical, _unit);
 
       switch (_boundary)
@@ -288,8 +296,9 @@ int main(int argc, char **argv)
     WLog("");
     if (strlen(_zoneName) > 0)
     	printf("[%s] - ", _zoneName);
-    printf("%s|%3.2f", _message, _value);
-	return _status;
+    //printf("%s|%3.2f", _message, _value);
+    printf("%s|%s", _message, _perfData);
+    return _status;
 }
 
 

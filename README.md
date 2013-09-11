@@ -1,14 +1,14 @@
 magSensor
 =========
 
-Nagios plugin to check temperature through Magiant's USB sensors.
+Nagios plugin to check temperature/humidity through Magiant's USB sensors.
 
 
 To compile, simply use gcc:
 
-                                      gcc magSensor.c -o magsensor
+                                      gcc magsensor.c -o magsensor
 
-Then put the magsensor executable file in a convenient directory (I use /usr/local/bin)
+Then put the magsensor executable file in a convenient directory (I use /usr/local/bin) - Will improve this process through autotools
 
 
 
@@ -17,7 +17,7 @@ How to use it
 
 You can run magsensor with the following syntax:
 
-    magSensor [-h] [-V] [-v] [-t <C|F>] [-m <T|H>] [-d <U|D>] [-z <Sensor name>] -p <devicePath> -c <value> -w <value>
+    magsensor [-h] [-V] [-v] [-t <C|F>] [-m <T|H>] [-d <U|D>] [-z <Sensor name>] -p <devicePath> -c <value> -w <value>
 
 Where :
 
@@ -53,7 +53,7 @@ Where :
 Configure Nagios
 ================
 
-In the config directory You'll find a couple of files, defining commands and services for Nagios. Modify them to suite Your needs,
+In the "nagioscfg" directory You'll find a couple of files, defining commands and services for Nagios. Modify them to suite Your needs,
 then copy them in Your Nagios config directory. Finally, restart Nagios to activate them.
 
 Since the Magiant Sensor is a USB device, the OS can deny access (even read-only) to it.
@@ -66,3 +66,15 @@ With a text editor, write in it the following line:
 SUBSYSTEM=="usb", ATTRS{idVendor}=="04d8", MODE="0666"
 
 This means that every device from Vendor "04d8" is installed with permission "666" (read allowed for User, Group and Owner).
+
+
+
+pnp4nagios
+==========
+
+In the "pnp4nagios" directory You'll find the template that will be used to draw perfdata on pnp4nagios graphs.
+
+To be used, the name of the template must follow the one of the Nagios command it's related to. Otherwise default.php will be used.
+
+Take magCheckHumidity.php and magCheckTemperature.php files and put them in the pnp4nagios "template" directory: 
+you'll stop using the "default" template to show perfdata from Magiant sensor. 
